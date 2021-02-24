@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+$primary: #51c2d5;
+
+.globalbtn{
+  color: #51c2d5;
+}
+.globalbtn:hover{
+  color: lighten($primary, 15%)
+}
+
