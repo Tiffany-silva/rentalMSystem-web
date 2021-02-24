@@ -1,5 +1,7 @@
 package com.EEA.App.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +13,7 @@ import java.util.Set;
 @Table(name = "users",
         uniqueConstraints = {@UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email")})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends AuditModel{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +36,16 @@ public class User extends AuditModel{
     @Size(max = 120)
     private String password;
 
-//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-//    @JoinColumn(name = "role_id", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
-//    private Role role;
+    @Size(max = 300)
+    private String photoURL;
+
+    private String address;
+
+    private String contactNumber;
+
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "file_id", referencedColumnName = "id")
+//    private File file;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(	name = "user_roles",
@@ -56,11 +64,30 @@ public class User extends AuditModel{
     public User() {
     }
 
-    public User(String name, String username, String email, String password) {
+    public User(String name, String username, String email, String password,String url, String contactNumber, String address) {
         this.name = name;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.photoURL=url;
+        this.contactNumber=contactNumber;
+        this.address=address;
+    }
+
+//    public File getFile() {
+//        return file;
+//    }
+//
+//    public void setFile(File file) {
+//        this.file = file;
+//    }
+
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
     }
 
     public Long getId() {
@@ -101,5 +128,21 @@ public class User extends AuditModel{
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 }
