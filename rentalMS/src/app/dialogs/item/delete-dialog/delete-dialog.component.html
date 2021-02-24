@@ -1,0 +1,19 @@
+<h3 mat-dialog-title>Are you sure?</h3>
+<div mat-dialog-content>
+  Category: {{data.item.category.categoryName}}
+  <p></p>
+  Item Name: {{data.item.itemName}}
+  <p></p>
+  Description: {{data.item.description}}
+  <p></p>
+  Quantity: {{data.item.quantity}}
+  <p></p>
+  Price: {{data.item.price}}
+  <p></p>
+
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button color="warn" [mat-dialog-close]="1">Delete</button>
+  <button mat-button color="primary" (click)="onNoClick()">Cancel</button>
+</div>

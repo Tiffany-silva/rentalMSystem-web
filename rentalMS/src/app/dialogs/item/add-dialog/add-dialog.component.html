@@ -1,0 +1,54 @@
+<h3 mat-dialog-title>Add new Item</h3>
+
+<form class="mat-dialog-content" #formControl="ngForm">
+
+  <div class="form">
+    <mat-form-field color="accent">
+      <mat-label>Category Type</mat-label>
+      <mat-select [(ngModel)]="data.newItem.categoryId" name="category">
+        <mat-option *ngFor="let c of data.newItem.categories" [value]="c">
+          {{c.categoryName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+    <div class="form">
+      <mat-form-field color="accent">
+        <input matInput #input class="form-control" placeholder="Item Name" [(ngModel)]="data.newItem.item._itemName" name="itemName" required >
+        <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+      </mat-form-field>
+    </div>
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #input class="form-control" placeholder="Description" [(ngModel)]="data.newItem.item._description" name="description" required >
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <!--Contains mat-hint for characters count and has maxLength set-->
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #inputstate class="form-control" placeholder="Quantity" [(ngModel)]="data.newItem.item._quantity" name="quantity" required>
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <!--Contains mat-hint for characters count and has maxLengt set-->
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #inputstate class="form-control" placeholder="Price" [(ngModel)]="data.newItem.item._price" name="price" required >
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+  <div style="font-weight: lighter; font-size: 15px">**Upload Item Image</div>
+  <div class="form">
+
+    <input type="file" (change)="selectImage($event)" />
+  </div>
+
+
+  <div mat-dialog-actions>
+    <button mat-button type="submit" [disabled]="!formControl.valid" [mat-dialog-close]="data">Add</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+  </div>
+</form>

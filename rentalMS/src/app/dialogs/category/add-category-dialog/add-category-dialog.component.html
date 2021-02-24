@@ -1,0 +1,18 @@
+<h3 mat-dialog-title>Add new Category</h3>
+
+<form class="mat-dialog-content" #formControl="ngForm">
+
+  <!--Contains mat-hint for characters count and has maxLength set-->
+  <div class="form">
+    <mat-form-field color="accent">
+      <input matInput #inputstate class="form-control" placeholder="Category Name" [(ngModel)]="data" name="CategoryName" required >
+      <mat-error *ngIf="formControl.invalid">{{getErrorMessage()}}</mat-error>
+    </mat-form-field>
+  </div>
+
+
+  <div mat-dialog-actions>
+    <button mat-button type="submit" [disabled]="!formControl.valid" [mat-dialog-close]="data">Add</button>
+    <button mat-button (click)="onNoClick()">Cancel</button>
+  </div>
+</form>
