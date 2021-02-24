@@ -1,15 +1,25 @@
+/**
+ * @Date: 24-12-2020
+ * @Description: Describes the model
+ *               class for the rental entity
+ *               'Rental': An order added for a specific
+ *               item of lessor by a lessee
+ **/
 package com.EEA.App.models;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
+@NamedEntityGraph(name = "rental-user-item-graph",
+        attributeNodes={
+                @NamedAttributeNode("item"),
+                @NamedAttributeNode("user")
+        })
 @Table(name = "rental")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Rental extends AuditModel{
 
     @Id
@@ -17,10 +27,10 @@ public class Rental extends AuditModel{
     private Long id;
 
     @NotNull
-    private Date rentalDate;
+    private LocalDate rentalDate;
 
     @NotNull
-    private Date returnDate;
+    private LocalDate returnDate;
 
     @NotNull
     private Double totalPrice;
@@ -28,19 +38,16 @@ public class Rental extends AuditModel{
     @NotNull
     private EStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "item_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Item item;
 
-    public Rental(Long id, @NotNull Date rentalDate, @NotNull Date returnDate, @NotNull Double totalPrice, User user, Item item, EStatus status) {
+    public Rental(Long id, @NotNull LocalDate rentalDate, @NotNull LocalDate returnDate,
+                  @NotNull Double totalPrice, User user, Item item, EStatus status) {
         this.id = id;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
@@ -52,61 +59,39 @@ public class Rental extends AuditModel{
 
     public Rental(){}
 
-    public EStatus getStatus() {
-        return status;
-    }
+    public EStatus getStatus() { return status; }
 
-    public void setStatus(EStatus status) {
-        this.status = status;
-    }
+    public void setStatus(EStatus status) { this.status = status; }
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Long id) { this.id = id; }
 
-    public Date getRentalDate() {
-        return rentalDate;
-    }
-
-    public void setRentalDate(Date rentalDate) {
+    public void setRentalDate(LocalDate rentalDate) {
         this.rentalDate = rentalDate;
     }
 
-    public Date getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.returnDate = returnDate;
     }
 
-    public Double getTotalPrice() {
-        return totalPrice;
+    public LocalDate getRentalDate() {
+        return rentalDate;
     }
 
-    public void setTotalPrice(Double totalPrice) {
-        this.totalPrice = totalPrice;
+    public LocalDate getReturnDate() {
+        return returnDate;
     }
 
-    public User getUser() {
-        return user;
-    }
+    public Double getTotalPrice() { return totalPrice; }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public void setTotalPrice(Double totalPrice) { this.totalPrice = totalPrice; }
 
-    public Item getItem() {
-        return item;
-    }
+    public User getUser() { return user; }
 
-    public void setItem(Item item) {
-        this.item = item;
-    }
+    public void setUser(User user) { this.user = user; }
 
+    public Item getItem() { return item; }
 
+    public void setItem(Item item) { this.item = item; }
 }

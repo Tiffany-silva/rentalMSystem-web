@@ -2,8 +2,7 @@ package com.EEA.App.repository;
 
 import com.EEA.App.models.EStatus;
 import com.EEA.App.models.Rental;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,16 +14,18 @@ import java.util.Optional;
 
 @Repository
 public interface RentalRepository extends JpaRepository<Rental, Long> {
-    Page<Rental> findByItemId(Long itemId, Pageable pageable);
     List<Rental> findByItemId(Long itemId);
 
     Optional<Rental> findByIdAndItemIdAndUserId(Long id, Long itemId, Long userId);
     Optional<Rental> findByUserIdAndItemId(Long itemId, Long userId);
-    Page<Rental> findByUserIdAndStatus(Long userId, EStatus status, Pageable pageable);
 
-    Page<Rental> findByStatus(EStatus status, Pageable pageable);
+    @EntityGraph("rental-user-item-graph")
+    List<Rental> findByUserIdAndStatus(Long userId, EStatus status);
 
-    Page<Rental> findByUserId(Long userId, Pageable pageable);
+    List<Rental> findByStatus(EStatus status);
+
+    @EntityGraph("rental-user-item-graph")
+    List<Rental> findByUserId(Long userId);
 
     @Modifying
     @Query("update Rental rental set rental.status = :status where rental.id = :id")

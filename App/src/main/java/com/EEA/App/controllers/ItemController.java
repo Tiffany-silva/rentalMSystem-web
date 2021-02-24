@@ -4,19 +4,20 @@ import com.EEA.App.exceptions.ResourceNotFoundException;
 import com.EEA.App.models.Category;
 import com.EEA.App.models.Item;
 import com.EEA.App.models.User;
+import com.EEA.App.payload.request.ItemRequest;
 import com.EEA.App.repository.CategoryRepository;
 import com.EEA.App.repository.ItemRepository;
 import com.EEA.App.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 public class ItemController {
@@ -31,24 +32,39 @@ public class ItemController {
     private UserRepository userRepository;
 
     @GetMapping("/categories/{categoryId}/items")
-    @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE')")
-    public Page<Item> getAllItemsByCategory(@PathVariable (value = "categoryId") Long categoryId,
-                                            Pageable pageable) {
-        return itemRepository.findByCategoryId(categoryId, pageable);
+//    @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE')")
+    public List<Item> getAllItemsByCategory(@PathVariable (value = "categoryId") Long categoryId) {
+        return itemRepository.findByCategoryId(categoryId);
+    }
+
+    @GetMapping("users/{userId}/categories/{categoryId}/items")
+//    @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE')")
+    public List<Item> getAllItemsByCategoryAndUserId(@PathVariable (value = "categoryId") Long categoryId,@PathVariable(value="userId") Long userId) {
+        return itemRepository.findByUserIdAndCategoryId(userId, categoryId);
     }
 
     @GetMapping("/users/{userId}/items")
     @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN')")
-    public Page<Item> getAllItemsByUserId(@PathVariable (value = "userId") Long userId,
-                                            Pageable pageable) {
-        return itemRepository.findByUserId(userId, pageable);
+    public List<Item> getAllItemsByUserId(@PathVariable (value = "userId") Long userId) {
+        return itemRepository.findByUserId(userId);
     }
 
-    @GetMapping("/items/{itemName}")
+    @GetMapping("/items/itemName{itemName}")
     @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE')")
-    public Page<Item> getAllByItemName(@PathVariable (value = "itemName") String itemName,
-                                          Pageable pageable) {
-        return itemRepository.findByItemName(itemName, pageable);
+    public List<Item> getAllByItemName(@PathVariable (value = "itemName") String itemName) {
+        return itemRepository.findByItemName(itemName);
+    }
+
+    @GetMapping("/items")
+//    @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE')")
+    public List<Item> getAllItems() {
+         return itemRepository.findAll();
+    }
+
+    @GetMapping("/items/itemId/{itemId}")
+//    @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE')")
+    public Item getItembyId(@PathVariable (value = "itemId") Long itemId) {
+        return itemRepository.getOne(itemId);
     }
 
     @PostMapping("users/{userId}/categories/{categoryId}/items")
@@ -78,6 +94,23 @@ public class ItemController {
         }).orElseThrow(() -> new ResourceNotFoundException("ItemId " + itemId + "not found"));
     }
 
+    @PutMapping("/categories/{categoryId}/items/{itemId}/update")
+    @PreAuthorize("hasRole('ROLE_LESSOR')")
+    public Item updateItem(@PathVariable(value = "categoryId") Long categoryId,
+                                   @PathVariable (value = "itemId") Long itemId,
+                                   @Valid @RequestBody ItemRequest itemRequest) {
+        if(!categoryRepository.existsById(categoryId)) {
+            throw new ResourceNotFoundException("CategoryId " + categoryId + " not found");
+        }
+
+        return itemRepository.findById(itemId).map(item -> {
+            item.setQuantity(itemRequest.getQuantity());
+            item.setPrice(itemRequest.getPrice());
+            item.setDescription(itemRequest.getDescription());
+            return itemRepository.save(item);
+        }).orElseThrow(() -> new ResourceNotFoundException("ItemId " + itemId + "not found"));
+    }
+
     @PutMapping("/categories/{categoryId}/items/{itemId}/updatePrice")
     @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN')")
     public Item updateItemPrice(@PathVariable(value = "categoryId") Long categoryId,
@@ -97,9 +130,9 @@ public class ItemController {
     @PreAuthorize("hasRole('ROLE_LESSOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> deleteItem(@PathVariable (value = "categoryId") Long categoryId,
                                            @PathVariable (value = "itemId") Long itemId) {
-        return itemRepository.findByIdAndCategoryId(itemId, categoryId).map(item -> {
-            itemRepository.delete(item);
+        Optional<Item> itemOp= itemRepository.findById(itemId);
+        Item item=itemOp.get();
+        itemRepository.delete(item);
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("Item not found with id " + itemId + " and categoryId " + categoryId));
     }
 }

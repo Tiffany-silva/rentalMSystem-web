@@ -1,5 +1,5 @@
 package com.EEA.App.security.jwt;
-import com.EEA.App.security.services.UserDetailsImplementation;
+import com.EEA.App.security.securityServices.UserDetailsImplementation;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -3,6 +3,8 @@ package com.EEA.App.models;
 import java.util.Date;
 
 public class RequestedDate {
+
+
     private Date rentalDate;
 
     private Date returnDate;

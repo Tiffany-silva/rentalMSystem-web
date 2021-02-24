@@ -1,6 +1,5 @@
 package com.EEA.App.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -8,6 +7,11 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
     @Entity
+    @NamedEntityGraph(name = "item-user-category-graph",
+            attributeNodes={
+                    @NamedAttributeNode("category"),
+                    @NamedAttributeNode("user")
+            })
     @Table(name = "item")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     public class Item extends AuditModel{
@@ -28,19 +32,28 @@ import javax.persistence.*;
         @Column(name = "price")
         private Double price;
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @Column(name = "image")
+        private String image;
+
+        @ManyToOne(fetch = FetchType.EAGER,  optional = false)
         @JoinColumn(name = "user_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
         private User user;
 
-        @ManyToOne(fetch = FetchType.LAZY, optional = false)
+        @ManyToOne(fetch = FetchType.EAGER, optional = false)
         @JoinColumn(name = "category_id", nullable = false)
         @OnDelete(action = OnDeleteAction.CASCADE)
-        @JsonIgnore
         private Category category;
 
-        public Item(long id, String itemName, String description, Integer quantity, Double price, Category category, User user) {
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public Item(long id, String itemName, String description, Integer quantity, Double price, Category category, User user, String image) {
             this.id = id;
             this.itemName = itemName;
             this.quantity = quantity;
@@ -48,6 +61,7 @@ import javax.persistence.*;
             this.category = category;
             this.description=description;
             this.user=user;
+            this.image=image;
         }
 
         public Item() {

@@ -3,7 +3,6 @@ package com.EEA.App.payload.request;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Set;
 
 public class SignupRequest {
     @NotBlank
@@ -15,7 +14,7 @@ public class SignupRequest {
     @Email
     private String email;
 
-    private Set<String> role;
+    private String role;
 
     @NotBlank
     @Size(min = 6, max = 40)
@@ -24,6 +23,41 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 3, max = 50)
     private String name;
+
+//    private MultipartFile file;
+
+    @Size(min = 3, max = 300)
+    private String photoURL;
+
+    @Size(min = 3, max = 300)
+    private String address;
+
+    private String contactNumber;
+
+
+//    public MultipartFile getFile() {
+//        return file;
+//    }
+//
+//    public void setFile(MultipartFile file) {
+//        this.file = file;
+//    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contact) {
+        this.contactNumber = contact;
+    }
 
     public String getName() {
         return name;
@@ -45,6 +79,7 @@ public class SignupRequest {
         return email;
     }
 
+
     public void setEmail(String email) {
         this.email = email;
     }
@@ -57,11 +92,19 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public Set<String> getRole() {
+    public String getPhotoURL() {
+        return photoURL;
+    }
+
+    public void setPhotoURL(String photoURL) {
+        this.photoURL = photoURL;
+    }
+
+    public String getRole() {
         return this.role;
     }
 
-    public void setRole(Set<String> role) {
+    public void setRole(String role) {
         this.role = role;
     }
 }

@@ -10,8 +10,11 @@ import com.EEA.App.payload.response.MessageResponse;
 import com.EEA.App.repository.RoleRepository;
 import com.EEA.App.repository.UserRepository;
 import com.EEA.App.security.jwt.JwtUtils;
-import com.EEA.App.security.services.UserDetailsImplementation;
+import com.EEA.App.security.securityServices.UserDetailsImplementation;
+import com.EEA.App.service.FileService;
+import com.EEA.App.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -45,16 +48,25 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @Autowired
+    FileService fileService;
+
+    @Autowired
+    UserService userService;
+
+    //authenticates the user
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                        loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        UserDetailsImplementation userDetails = (UserDetailsImplementation) authentication.getPrincipal();
+        UserDetailsImplementation userDetails = (UserDetailsImplementation)
+                authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
@@ -64,62 +76,72 @@ public class AuthController {
                 userDetails.getName(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
-                roles));
+                roles, userDetails.getImageUrl(), userDetails.getAddress(), userDetails.getContactNumber()));
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+    @PostMapping(value = "/signup")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+//        SignupRequest userJson = userService.user2json(user);
+
+        if (userRepository.existsByUsername(signupRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
 
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (userRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
+        try {
+//            File newFile=fileService.store(file);
+            System.out.println(signupRequest.toString());
 
-        // Create new user's account
-        User user = new User(signUpRequest.getName(),signUpRequest.getUsername(),
-                signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()));
+            // Create new user's account
+            User newUser = new User(signupRequest.getName(), signupRequest.getUsername(),
+                    signupRequest.getEmail(),
+                    encoder.encode(signupRequest.getPassword()), signupRequest.getPhotoURL(), signupRequest.getContactNumber(), signupRequest.getAddress());
 
-        Set<String> strRoles = signUpRequest.getRole();
-        Set<Role> roles = new HashSet<>();
+            String role = signupRequest.getRole();
+//            Set<Role> roles =userJson.getRole();
+            Set<Role> newRoles = new HashSet<>();
+            if (role == null) {
+                System.out.println(role);
+                Role userRole = roleRepository.findByType(ERole.ROLE_LESSEE)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                newRoles.add(userRole);
+            } else {
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByType(ERole.ROLE_LESSEE)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "ROLE_ADMIN":
                         Role adminRole = roleRepository.findByType(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
+                        newRoles.add(adminRole);
 
                         break;
-                    case "lessor":
-                        Role lessor = roleRepository.findByType(ERole.ROLE_LESSOR)
+                    case "ROLE_LESSOR":
+                        Role modRole = roleRepository.findByType(ERole.ROLE_LESSOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(lessor);
+                        newRoles.add(modRole);
 
                         break;
-                    case "lessee":
+                    case "ROLE_LESSEE":
                     default:
-                        Role lessee = roleRepository.findByType(ERole.ROLE_LESSEE)
+                        System.out.println(role);
+                        Role userRole = roleRepository.findByType(ERole.ROLE_LESSEE)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(lessee);
+                        newRoles.add(userRole);
                 }
-            });
+            }
+
+            newUser.setRoles(newRoles);
+            userRepository.save(newUser);
+
+            return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+        } catch (Exception e) {
+            String message = e.getMessage();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageResponse(message));
         }
-
-        user.setRoles(roles);
-        userRepository.save(user);
-
-        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }

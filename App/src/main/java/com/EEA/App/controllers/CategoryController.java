@@ -4,15 +4,14 @@ import com.EEA.App.exceptions.ResourceNotFoundException;
 import com.EEA.App.models.Category;
 import com.EEA.App.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
 public class CategoryController {
@@ -22,19 +21,19 @@ public class CategoryController {
 
 
     @GetMapping("/categories")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Page<Category> getAllCategories(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_LESSEE') or hasRole('ROLE_LESSOR')")
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
 
-    @PostMapping("/categories")
+    @PostMapping("/categories/add")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Category createCategory(@Valid @RequestBody Category category) {
         return categoryRepository.save(category);
     }
 
-    @PutMapping("/categories/{categoryId}")
+    @PutMapping("/categories/update/{categoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Category updateCategory(@PathVariable Long categoryId, @Valid @RequestBody Category categoryRequest) {
         return categoryRepository.findById(categoryId).map(category -> {
@@ -42,7 +41,6 @@ public class CategoryController {
             return categoryRepository.save(category);
         }).orElseThrow(() -> new ResourceNotFoundException("CategoryId " + categoryId + " not found"));
     }
-
 
     @DeleteMapping("/categories/{categoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
