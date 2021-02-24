@@ -1,0 +1,37 @@
+.container{
+  width: 100vw;
+  height: 70vh;
+  overflow: hidden;
+  // overflow-y: scroll;
+}
+
+.product{
+  width: 200px;
+  height: 510px;
+  text-align: center;
+  margin-bottom: 20px; /* same as fxLayoutGap for even distribution */
+}
+
+.product img{
+  height: 400px;
+  object-fit: cover;
+}
+ul {
+  list-style-type: none;
+  margin-top: 4px;
+}
+.tagname{
+  font-weight: lighter;
+  font-size: 17px ;
+}
+
+.details{
+  font-size: 15px;
+}
+
+.btnfilled{
+  margin-top: 10%; background-color: #0a043c; color: white;
+}
+.btnfilled:hover{
+  background-color: lighten(#0a043c, 15%)
+}

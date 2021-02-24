@@ -1,0 +1,41 @@
+<app-nav-bar-lessee></app-nav-bar-lessee>
+<div class="filtering">
+  <mat-form-field class="filter">
+    <mat-select name="statusReactiveVaraible" [formControl]="selectedCategory" (ngModelChange)="filterItems()" placeholder="Category">
+      <mat-option *ngFor="let s of categories" [value]="s">
+        {{s.categoryName}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field appearance="outline" style="width: 58%; color: #0a043c">
+    <mat-label>Search Items</mat-label>
+    <input  matInput (keyup)="applyFilter($event)" placeholder="Search Items" #input>
+  </mat-form-field>
+
+</div>
+
+<div class="content" fxLayout="row wrap" fxLayoutGap="5px grid">
+  <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let item of obs | async; let i = index">
+  <mat-card style="text-align: center;" fxFlex="0 1 calc(20% - 20px)" class="item">
+      <mat-card-title style="font-size: medium;">{{item?.itemName}}</mat-card-title>
+    <img class="image" mat-card-image src={{item.image}} alt="photo">
+    <mat-card-content>
+      <p style="font-weight: bold">
+        {{item.category.categoryName}}
+      </p>
+      <p >
+        {{item.description}}
+      </p>
+      <div style="font-weight: bold">
+         $ {{item.price}}
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-stroked-button style="color: #0a043c" routerLink="/item-detail/{{item.id}}">More Information</button>
+    </mat-card-actions>
+  </mat-card>
+  </div>
+
+</div>
+<mat-paginator [pageSizeOptions]="[10, 15, 20]"></mat-paginator>
+<app-footer></app-footer>

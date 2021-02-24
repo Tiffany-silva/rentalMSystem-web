@@ -1,0 +1,44 @@
+.container{
+  // width: 100vw;
+  //height: 100vh;
+  overflow: hidden;
+  // overflow-y: scroll;
+}
+
+.product{
+  min-width: 250px;
+  height: 450px;
+  //text-align: center;
+  margin-bottom: 20px; /* same as fxLayoutGap for even distribution */
+}
+img{
+  height: 410px;
+  object-fit: contain;
+}
+
+.profile{
+  width: 350px;
+}
+.product img{
+  height: 410px;
+  object-fit: cover;
+}
+body{
+  color:#fff;
+  font-size:100pt;
+}
+.section1{
+  width:30%;
+  float:left;
+  height:100vh;
+  margin:0;
+  padding:0;
+}
+.section2{
+  width:70%;
+  float:left;
+  height:100vh;
+  margin:0;
+  padding:0;
+  box-sizing: border-box;
+}

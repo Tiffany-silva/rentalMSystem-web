@@ -1,0 +1,127 @@
+<app-nav-bar-admin></app-nav-bar-admin>
+<mat-tab-group style="padding-top: 1%">
+  <mat-tab label="Category Management">
+    <div style="padding-top: 2%">
+      <div class="container mat-elevation-z8">
+        <div class="form">
+          <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="Filter Categories" #input>
+          </mat-form-field>
+        </div>
+
+        <mat-table #table [dataSource]="dataSourceCategory" matSort #sort="matSort" class="mat-cell">
+
+          <ng-container matColumnDef="category">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+            <mat-cell *matCellDef="let row" >{{row.categoryName}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Created At</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.createdAt}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>
+              <button mat-icon-button color="primary" (click)="openAddDialog()">
+                <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+              </button>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row; let i=index;">
+              <button mat-icon-button class="editbtn" (click)="startEdit(row.id, row.categoryName)">
+                <mat-icon aria-label="Edit">edit</mat-icon>
+              </button>
+
+              <button mat-icon-button class="deletebtn" (click)="deleteItem(row)">
+                <mat-icon aria-label="Delete">delete</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+
+        <mat-paginator #paginator
+                       [pageIndex]="0"
+                       [pageSize]="10"
+                       [pageSizeOptions]="[1, 10, 25, 100]">
+        </mat-paginator>
+      </div>
+    </div>
+<!--    <h1 align="center" >Category Management</h1>-->
+<!--    <mat-divider style="padding-bottom: 2%"></mat-divider>-->
+
+  </mat-tab>
+  <mat-tab label="User Management">
+    <div style="padding-top: 2%">
+      <div class="container mat-elevation-z8">
+        <div class="form">
+          <mat-form-field>
+            <mat-label>Filter</mat-label>
+            <input matInput (keyup)="applyFilterUsers($event)" placeholder="Filter Users" #input>
+          </mat-form-field>
+        </div>
+
+        <mat-table #table [dataSource]="dataSourceUser" matSort #sortUsers="matSort" class="mat-cell">
+
+          <ng-container matColumnDef="username">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Username</mat-header-cell>
+            <mat-cell *matCellDef="let row" >{{row.username}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>name</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.name}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="email">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>email</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.email}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="roles">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Role</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.roles[0].type}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Created At</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.createdAt}}</mat-cell>
+          </ng-container>
+
+
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef>
+              <button mat-icon-button color="primary">
+                <mat-icon aria-label="Example icon-button with a heart icon">add</mat-icon>
+              </button>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row; let i=index;">
+              <button mat-icon-button class="editbtn">
+                <mat-icon aria-label="Edit">edit</mat-icon>
+              </button>
+            </mat-cell>
+          </ng-container>
+
+
+          <mat-header-row *matHeaderRowDef="displayedUserColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedUserColumns;"></mat-row>
+        </mat-table>
+
+        <mat-paginator #paginatorUsers
+                       [pageIndex]="0"
+                       [pageSize]="10"
+                       [pageSizeOptions]="[1, 10, 25, 100]">
+        </mat-paginator>
+      </div>
+    </div>
+<!--    <h1 align="center" >User Management</h1>-->
+<!--    <mat-divider style="padding-bottom: 2%"></mat-divider>-->
+
+  </mat-tab>
+</mat-tab-group>
+
+
+<app-footer></app-footer>

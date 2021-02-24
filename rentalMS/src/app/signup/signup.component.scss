@@ -1,0 +1,32 @@
+.fill-remaining-space {
+  /* This fills the remaining space, by using flexbox.
+     Every toolbar row uses a flexbox row layout. */
+  flex: 1 1 auto;
+}
+
+.container {
+  padding: 10px;
+}
+
+.form {
+  min-width: 150px;
+  max-width: 500px;
+  width: 100%;
+}
+
+.form-element {
+  width: 100%;
+}
+
+.button {
+  width: 100%;
+}
+
+.bg{
+  //background-repeat: no-repeat;
+  //background-attachment: fixed;
+  height: 100%;
+  //background:linear-gradient(0deg, rgba(255, 0, 150, 0.3), rgba(255, 0, 150, 0.3)), ;
+  background:url("../../assets/bgex.jpg");
+  background-size:cover;
+}

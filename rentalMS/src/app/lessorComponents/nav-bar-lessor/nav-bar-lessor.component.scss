@@ -1,0 +1,82 @@
+body {
+  font-family: Roboto, Arial, sans-serif;
+  margin: 0;
+}
+mat-toolbar{
+  background-color: #03506f ;
+}
+.mat-toolbar .mat-input-element{
+  caret-color: currentColor;
+  background: white;
+  padding: 10px;
+  color: black;
+  margin: -13px;
+}
+.placeholder {
+  color: gray;
+}
+.logo{
+  font-size: 30px;
+}
+.searchbar{
+  padding-left: 5%;
+  display: inline-block;
+}
+
+.logout{
+  padding-left: 60%;
+  display: inline-block;
+}
+.material-icons{
+  color: white;
+  padding-bottom: 5px;
+  padding-right: 20px;
+}
+.basic-container {
+  padding: 50px;
+
+  a {
+    text-decoration: none;
+    color: yellow;
+  }
+}
+button.mat-menu-item {
+  width: 100%;
+  color: white;
+}
+.version-info {
+  color: black;
+  font-size: 8pt;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+.menu-spacer {
+  flex: 1 1 auto;
+}
+
+span{
+  color: black;
+}
+/* here's what you're looking for B-) */
+mat-nav-list.list-horizontal {
+  padding: 0;
+  .mat-list-item {
+    display: inline-block;
+    height: auto;
+    width: auto;
+  }
+}
+mat-menu{
+  color: black;
+}
+
+.mat-toolbar-row, .mat-toolbar-single-row{
+  height: unset !important;
+}
+
+.mat-list-item .mat-list-item-content {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+
+}

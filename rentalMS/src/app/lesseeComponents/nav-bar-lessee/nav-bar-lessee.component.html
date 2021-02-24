@@ -1,0 +1,47 @@
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="mat-app-background">
+  <mat-toolbar>
+    <mat-nav-list class="list-horizontal">
+      <mat-list-item>
+        <button class="logo" mat-menu-item>R E N T A L M S</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button  mat-menu-item routerLink="/home">HOME</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-menu-item routerLink="/about">ABOUT</button>
+      </mat-list-item>
+      <mat-list-item>
+        <button mat-menu-item [matMenuTriggerFor]="billsmenu" >ACCOUNT</button>
+      </mat-list-item>
+      <mat-menu #billsmenu="matMenu" [overlapTrigger]="false">
+        <button mat-menu-item>
+          <span routerLink="/profile">MY PROFILE</span>
+        </button>
+        <button mat-menu-item>
+          <span routerLink="/lessee-rentals">MY RENTALS</span>
+        </button>
+        <button mat-menu-item>
+          <span routerLink="/profile-settings">SETTINGS</span>
+        </button>
+      </mat-menu>
+
+      <div class="logout">
+        <mat-list-item>
+          <button  *ngIf="isUserloggedIn()" mat-menu-item (click)="logout()">
+            <mat-icon aria-label="logout">logout</mat-icon>
+          </button>
+          <button *ngIf="!isUserloggedIn()" mat-menu-item routerLink="/login">
+            <mat-icon aria-label="login">login</mat-icon>
+          </button>
+        </mat-list-item>
+      </div>
+
+
+
+    </mat-nav-list>
+
+  </mat-toolbar>
+</div>

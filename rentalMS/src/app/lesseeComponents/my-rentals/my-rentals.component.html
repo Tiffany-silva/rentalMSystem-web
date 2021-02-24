@@ -1,0 +1,90 @@
+<app-nav-bar-lessee></app-nav-bar-lessee>
+<h1 align="center" >My Rentals</h1>
+<mat-divider style="padding-bottom: 2%"></mat-divider>
+
+<div class="container mat-elevation-z8">
+  <div class="form">
+    <mat-form-field class="filter">
+      <mat-select name="statusReactiveVaraible" [formControl]="selectedStatus" (ngModelChange)="filterItems()" placeholder="Category">
+        <mat-option *ngFor="let s of status" [value]="s">
+          {{s}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field color="accent">
+
+      <mat-label>Filter</mat-label>
+
+      <input matInput (keyup)="applyFilter($event)" placeholder="Filter Rentals" #input>
+    </mat-form-field>
+  </div>
+
+  <mat-table #table [dataSource]="dataSource" matSort #sort="matSort" class="mat-cell">
+
+    <ng-container matColumnDef="itemName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</mat-header-cell>
+      <mat-cell *matCellDef="let row" >{{row.item.itemName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.item.category.categoryName}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="rentalDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Rental Date</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.rentalDate}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="returnDate">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Return Date</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.returnDate}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="totalPrice">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Total Price</mat-header-cell>
+      <mat-cell *matCellDef="let row">$ {{row.totalPrice}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="contact">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Contact</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.user.contactNumber}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="address">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Address</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.user.address}}</mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.status}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Created At</mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{row.createdAt}}</mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="actions">
+      <mat-header-cell *matHeaderCellDef>
+        Update Status
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row; let i=index;">
+        <button mat-icon-button class="globalbtn" (click)="startEdit(row.id,row)">
+          <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator #paginator
+                 [pageIndex]="0"
+                 [pageSize]="10"
+                 [pageSizeOptions]="[1, 10, 25, 100]">
+  </mat-paginator>
+</div>
+<app-footer></app-footer>
+

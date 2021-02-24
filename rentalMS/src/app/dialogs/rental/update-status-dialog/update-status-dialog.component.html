@@ -1,0 +1,32 @@
+<div class="container">
+  <h3 mat-dialog-title>Update Status</h3>
+
+  <form class="mat-dialog-content"  #formControl="ngForm">
+
+    <div class="form" *ngIf="data.type==='rental'">
+      <mat-form-field style="color: #0a043c">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="data.item.status" name="status">
+          <mat-option *ngFor="let s of status" [value]="s">
+            {{s}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="form" *ngIf="data.type==='order'">
+      <mat-form-field style="color: #0a043c">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="data.item.status" name="status">
+          <mat-option *ngFor="let s of statusOrder" [value]="s">
+            {{s}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div mat-dialog-actions>
+      <button mat-button type="submit" [mat-dialog-close]="data">Update Status</button>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+    </div>
+  </form>
+</div>

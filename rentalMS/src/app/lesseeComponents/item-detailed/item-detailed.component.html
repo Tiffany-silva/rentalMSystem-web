@@ -1,0 +1,56 @@
+<app-nav-bar-lessee></app-nav-bar-lessee>
+<h2 style="padding-left: 13%;padding-top: 5%;">{{itemDetails.itemName}}</h2>
+<div class="container" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="5px">
+
+  <!-- Add addProduct-button outside loop -->
+
+  <mat-card fxFlex="0 1 calc(60% - 20px)" class="product">
+    <img class="image" mat-card-image src={{itemDetails.image}} alt="photo">
+    <mat-card-content>
+      <p style="font-weight: lighter">
+        {{itemDetails.description}}
+      </p>
+      <p style="font-weight: bold"> $ {{itemDetails.price}}</p>
+    </mat-card-content>
+
+  </mat-card>
+  <mat-card fxFlex="0 1 calc(40% - 20px)" class="product">
+    <mat-form-field appearance="fill">
+      <mat-label>Enter a date range</mat-label>
+      <mat-date-range-input [formGroup]="range" [rangePicker]="picker" [min]="minDate" [max]="setMaxDate()">
+        <input matStartDate formControlName="start" placeholder="Start date">
+        <input matEndDate formControlName="end" placeholder="End date">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+
+      <mat-error *ngIf="range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+      <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+    </mat-form-field>
+
+    <button style="margin-left: 2%;color: #0a043c" mat-stroked-button type="submit" (click)="getVehicleAvailability(range.controls.start.value, range.controls.end.value)" class="button" [disabled]="!range.valid">CHECK ITEM AVAILABILITY</button>
+
+    <div>
+      <span class="tagname">Name </span>
+      <p class="details">{{itemDetails.itemName}}</p>
+      <!-- <span style="font-size:32px;text-align:center">+<br />Add product</span> -->
+      <span class="tagname">Category </span>
+      <p class="details">{{itemDetails.category.categoryName}}</p>
+      <span class="tagname">Description</span>
+      <p class="details">{{itemDetails.description}}</p>
+
+      <span class="tagname"s>Available</span>
+      <p class="details">{{itemDetails.quantity}}</p>
+      <div>
+        <span>TOTAL </span>
+        <span style="font-weight: bold">$ {{totalPrice}}</span>
+      </div>
+
+    </div>
+    <mat-card-actions>
+      <button class="globalbtn" mat-raised-button (click)="createRental(range.controls.start.value, range.controls.end.value)"> RENT </button>
+
+    </mat-card-actions>
+  </mat-card>
+</div>
+<app-footer></app-footer>

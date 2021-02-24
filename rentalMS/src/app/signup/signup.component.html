@@ -1,0 +1,72 @@
+<div class="bg">
+  <div *ngIf="isSuccessful">
+    Your registration is successful!
+  </div>
+  <div style="display: flex">
+    <img align="start" style="width: 150px;padding: 1%;" src="assets/handshake.png"/>
+    <h1 align="end" style="padding-top: 2%;font-size: 35px;padding-left: 67%;color: darkslategrey;"><pre>R E N T A L  M S</pre></h1>
+  </div>
+  <mat-divider style="padding-bottom: 1%"></mat-divider>
+
+  <div class="row mb-5" style="width: 99%;">
+    <div class="col-sm-4">
+
+    </div>
+    <div class="col-sm-4  bg-light rounded shadow">
+      <div class="text-center h3 pt-3" style="color: #3366cc; font-weight: lighter">Sign Up | RentalMS</div>
+      <mat-divider></mat-divider>
+<div class="container" novalidate *ngIf="isSuccessful===false">
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit(formGroup.value)" class="form">
+    <mat-form-field class="form-element">
+      <mat-select name="statusReactiveVaraible" formControlName="role" placeholder="Role">
+        <mat-option *ngFor="let r of roles" [value]="r">
+          {{r}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="form-element">
+      <input matInput placeholder="Name" formControlName="name">
+      <mat-error *ngIf="!name.valid && name.touched">
+        {{ titleAlert }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-element">
+      <input matInput placeholder="Username" formControlName="username">
+      <mat-error *ngIf="!username.valid && username.touched">
+        {{ titleAlert }}
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field class="form-element">
+      <input matInput type="email" placeholder="Email" formControlName="email">
+      <mat-error *ngIf="!formGroup.controls['email'].valid && formGroup.controls['email'].touched">
+        {{ getErrorEmail() }}
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="form-element">
+      <input matInput type="password" placeholder="Password" formControlName="password">
+      <mat-hint>Choose a password of at least eight characters, one uppercase letter and one number</mat-hint>
+      <mat-error *ngIf="!formGroup.controls['password'].valid && formGroup.controls['password'].touched">
+        {{ getErrorPassword() }}
+      </mat-error>
+    </mat-form-field>
+    <div style="padding-top: 10%;">
+      <label>Upload Profile picture</label>
+    </div>
+    <label>
+      <input type="file" (change)="selectFile($event)" />
+    </label>
+
+    <div class="form-element">
+      <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Submit Form</button>
+      <div align="center" style="padding-top: 10px;"><a routerLink="/login">login instead?</a></div>
+    </div>
+
+  </form>
+</div>
+    </div>
+    <div class="col-sm-4">
+
+    </div>
+  </div>
+</div>
